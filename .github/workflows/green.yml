@@ -1,0 +1,25 @@
+name: Daily commit
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update log file
+        run: echo "$(date -u)" >> activity.log
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "tanvibandebuche@gmail.com"
+          git add activity.log
+          git commit -m "Automated update" || echo "Nothing to commit"
+          git push
